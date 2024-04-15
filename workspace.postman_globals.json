@@ -1,0 +1,99 @@
+{
+	"id": "ddb07ebd-c818-401f-82f6-fd5c5caf21c3",
+	"values": [
+		{
+			"key": "alertAuthInvalid",
+			"value": "E-mail ou senha informados são inválidos",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgAuthSucess",
+			"value": "Olá Qa-Coders-SYSADMIN, autenticação autorizada com sucesso!",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgObrigSucess",
+			"value": "O campo nome completo é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTMzMGZlZWU3NjA2NGY0NTlkNWYxMGQiLCJmdWxsTmFtZSI6IlFhLUNvZGVycy1TWVNBRE1JTiIsIm1haWwiOiJzeXNhZG1pbkBxYWNvZGVycy5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRhTXo4NTRBRmpETWtwUWZ6a040alh1Q05rQWpWSEsvRlR5Lll0WmF3M2pHcHpzL1RnbUtpSyIsImFjY2Vzc1Byb2ZpbGUiOiJTWVNBRE1JTiIsImNwZiI6IjExMTExMTExMTExIiwic3RhdHVzIjp0cnVlLCJhdWRpdCI6W3sicmVnaXN0ZXJlZEJ5Ijp7InVzZXJJZCI6IjExMTExMTExMTExMTExMTExMSIsInVzZXJMb2dpbiI6InN5c2FkbWluQHFhY29kZXJzLmNvbSJ9LCJyZWdpc3RyYXRpb25EYXRlIjoic2V4dGEtZmVpcmEsIDIwLzEwLzIwMjMsIDIwOjQwOjMwIEJSVCIsInJlZ2lzdHJhdGlvbk51bWJlciI6IjAxIiwiY29tcGFueUlkIjoiUWEuQ29kZXJzIiwiX2lkIjoiNjUzMzBmZWVlNzYwNjRmNDU5ZDVmMTBlIn1dLCJfX3YiOjAsImlhdCI6MTcwOTc1MDgyNSwiZXhwIjoxNzA5ODM3MjI1fQ.-iz0lyMnudcuVFfPn74iLPYc3hrUDwhwuxJVR84owds",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "msgFullCaract",
+			"value": "O nome completo deve ter no máximo 100 caracteres.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgLetraMaiuscula",
+			"value": "Informe o nome e sobrenome com as iniciais em letra maiúscula.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgErroEmail",
+			"value": "O campo e-mail é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgEmailInvalido",
+			"value": "O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgSenhaObrig",
+			"value": "password: O campo senha é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgSenhaMin",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgPerfil",
+			"value": "O campo perfil de acesso é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgConfirmSenha",
+			"value": "O campo de confirmação de senha não pode ficar vazio.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "alertNoExist",
+			"value": "Esse usuário não existe em nossa base de dados.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "msgDelete",
+			"value": "Usuário deletado com sucesso!.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ultimo_id",
+			"value": "65e9ed6b62c4338de3da0701",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-04-15T14:47:19.442Z",
+	"_postman_exported_using": "Postman/10.24.11"
+}

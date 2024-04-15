@@ -1,0 +1,4771 @@
+{
+	"info": {
+		"_postman_id": "1113aff8-8e1d-4dc0-a4f0-39daf57a9dbf",
+		"name": "02_Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27705872"
+	},
+	"item": [
+		{
+			"name": "Novo cadastro",
+			"item": [
+				{
+					"name": "Nome",
+					"item": [
+						{
+							"name": "Cadastro Sucess",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: `${ pm.environment.get('url') }/api/user/${ pm.environment.get('userId') }`,",
+											"    method: 'GET',",
+											"    header: { 'Authorization': `${ pm.environment.get('token') }` }",
+											"}, function (err, response) {",
+											"    try {",
+											"        pm.expect(response.json()).exist;",
+											"        testResult = true;",
+											"    } catch (error) {",
+											"        testResult = false;",
+											"        pm.test('Create user', function () {",
+											"            pm.expect(true).to.eql(testResult);",
+											"        });",
+											"    }",
+											"    if (testResult !== false) {",
+											"        pm.test('Status fullName is true', function () {",
+											"            pm.expect(pm.environment.get('fullName')).to.eql(response.json().fullName);",
+											"        });",
+											"        pm.test('Status email is true', function () {",
+											"            pm.expect(pm.environment.get('email')).to.eql(response.json().mail);",
+											"        });",
+											"        pm.test('Status cpf is true', function () {",
+											"            pm.expect(pm.environment.get('cpf')).to.eql(pm.response.json().user.cpf);",
+											"        });",
+											"        pm.test('Status code is 201', function () {",
+											"            pm.response.to.have.status(201);",
+											"        });",
+											"    }",
+											"})",
+											"",
+											"pm.environment.set('userId', pm.response.json().user._id)",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Campo nome em branco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O campo nome completo é obrigatório.', function () {\r",
+											"    pm.expect(pm.globals.get('msgObrigSucess')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"{fullName}}\": \"\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Nome com mais  de 100  caract",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O nome completo deve ter no máximo 100 caracteres.', function () {\r",
+											"    pm.expect(pm.globals.get('msgFullCaract')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Ansknjsadnjsacnjdsncjdsbncvjxbcvhjb Suadbisbcihsdbckjdxbcjkbcjkdb Sbdisbcfkjsdbckjzdbcj Suibadbajksdbcskjbcjksa\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Nome com iniciais minuscula",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"maria joana \",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Nome com numeros",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test(\"O campo nome completo não deve conter números.\", function () {\r",
+											"     pm.expect(pm.response.text()).to.include('O campo nome completo não deve conter números');\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Mart44 Jorge357 \",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Nome com caracteres especiais",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Jos@£ Lop&$ \",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obrigatorio nome composto",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Luis \",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Perfil de Acesso em branco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('O campo perfil de acesso é obrigatório.', function () {\r",
+											"    pm.expect(pm.globals.get('msgPerfil')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "apikey",
+						"apikey": [
+							{
+								"key": "in",
+								"value": "query",
+								"type": "string"
+							},
+							{
+								"key": "value",
+								"value": "{{tokenUser}}",
+								"type": "string"
+							},
+							{
+								"key": "key",
+								"value": "token",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Email",
+					"item": [
+						{
+							"name": "Email em branco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O campo e-mail é obrigatório.', function () {\r",
+											"    pm.expect(pm.globals.get('msgErroEmail')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{tokenUser}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Email com formato invalido",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code ins 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].', function () {\r",
+											"    pm.expect(pm.globals.get('msgEmailInvalido')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"teste12.hotmail.com\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Email com espaço no nome",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].', function () {\r",
+											"    pm.expect(pm.globals.get('msgEmailInvalido')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"tes te12@hotmail.com\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Email com espaço no dominio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].', function () {\r",
+											"    pm.expect(pm.globals.get('msgEmailInvalido')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"teste12@hot mail.com\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "apikey",
+						"apikey": [
+							{
+								"key": "in",
+								"value": "query",
+								"type": "string"
+							},
+							{
+								"key": "value",
+								"value": "{{tokenUser}}",
+								"type": "string"
+							},
+							{
+								"key": "key",
+								"value": "token",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Senha",
+					"item": [
+						{
+							"name": "Senha em branco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test(\"O campo senha é obrigatório\", function () {\r",
+											"     pm.expect(pm.response.text()).to.include('O campo senha é obrigatório');\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirmar password em branco",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('Campo Confirmação de senha é obrigatório.', function () {\r",
+											"    pm.expect(pm.globals.get('msgConfirmSenha')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Senha  com padrao invalido",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12\", function () {\r",
+											"     pm.expect(pm.response.text()).to.include('Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12');\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"14578\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"14578\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Senha  com menos de 8 caracteres Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.', function () {\r",
+											"    pm.expect(pm.globals.get('msgSenhaMin')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"14578\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"14578\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Senha com mais de  16 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.', function () {\r",
+											"    pm.expect(pm.globals.get('msgSenhaMin')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"Teste11@Test41578\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"Teste11@Test41578\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Senha com  13 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"})\r",
+											"\r",
+											"pm.test('Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-16.', function () {\r",
+											"    pm.expect(pm.globals.get('msgSenhaMin')).to.eql(JSON.parse(responseBody).error[0]);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Gerar Primeiro Nome\r",
+											"\r",
+											"function firstName() {\r",
+											"\r",
+											"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+											"\r",
+											"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"\r",
+											"pm.environment.set(\"FirstName\", firstName());\r",
+											"\r",
+											"//Gerar Ultimo nome\r",
+											"\r",
+											"function lastName() {\r",
+											"\r",
+											"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+											"\r",
+											"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"LastName\", lastName());\r",
+											"\r",
+											"// Gerar Nome e Sobrenome\r",
+											"\r",
+											"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+											"\r",
+											"// Gerar provedor de email\r",
+											"\r",
+											"function providerMail() {\r",
+											"\r",
+											"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+											"\r",
+											"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+											"\r",
+											"    return ramdomItem\r",
+											"}\r",
+											"pm.environment.set(\"ProviderMail\", providerMail());\r",
+											"\r",
+											"// Gerar Email commpleto\r",
+											"\r",
+											"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+											"\r",
+											"// Gerar CPF\r",
+											"\r",
+											"function gerarCPF() {\r",
+											"    let num = Math.floor(Math.random() * 999999999);\r",
+											"    let cpf = num.toString().padStart(9, '0');\r",
+											"    cpf += calcularDigito(cpf);\r",
+											"    cpf += calcularDigito(cpf);\r",
+											" \r",
+											"    return cpf;\r",
+											"}\r",
+											" \r",
+											"function calcularDigito(cpf) {\r",
+											"    let soma = 0;\r",
+											"    for (let i = 0; i < cpf.length; i++) {\r",
+											"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+											"    }\r",
+											"    let resto = (soma * 10) % 11;\r",
+											"    return (resto > 9) ? '0' : resto.toString();\r",
+											"}\r",
+											" \r",
+											"pm.environment.set(\"cpf\", gerarCPF());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "token",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "query",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"Teste11@Test41578\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"Teste11@Test41578\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/user/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "apikey",
+						"apikey": [
+							{
+								"key": "value",
+								"value": "{{token}}",
+								"type": "string"
+							},
+							{
+								"key": "key",
+								"value": "token",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "in",
+						"value": "query",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Login de Acesso",
+			"item": [
+				{
+					"name": "Novo usuario com sucess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check is fullName True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"FullName\")).to.eql(pm.response.json().user.fullName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check is mail True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"Mail\")).to.eql(pm.response.json().user.mail);\r",
+									"});\r",
+									"pm.test(\"Check is cpf True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"cpf\")).to.eql(pm.response.json().user.cpf);\r",
+									"});\r",
+									"    pm.test(\"Check is status True\", function(){\r",
+									"    pm.expect(true).to.eql(pm.response.json().user.status);\r",
+									"    });\r",
+									"    \r",
+									"    pm.environment.set('userId', pm.response.json().user._id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"//Gerar Primeiro Nome\r",
+									"\r",
+									"function firstName() {\r",
+									"\r",
+									"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+									"\r",
+									"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"FirstName\", firstName());\r",
+									"\r",
+									"//Gerar Ultimo nome\r",
+									"\r",
+									"function lastName() {\r",
+									"\r",
+									"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+									"\r",
+									"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"pm.environment.set(\"LastName\", lastName());\r",
+									"\r",
+									"// Gerar Nome e Sobrenome\r",
+									"\r",
+									"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+									"\r",
+									"// Gerar provedor de email\r",
+									"\r",
+									"function providerMail() {\r",
+									"\r",
+									"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+									"\r",
+									"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"pm.environment.set(\"ProviderMail\", providerMail());\r",
+									"\r",
+									"// Gerar Email commpleto\r",
+									"\r",
+									"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+									"\r",
+									"// Gerar CPF\r",
+									"\r",
+									"function gerarCPF() {\r",
+									"    let num = Math.floor(Math.random() * 999999999);\r",
+									"    let cpf = num.toString().padStart(9, '0');\r",
+									"    cpf += calcularDigito(cpf);\r",
+									"    cpf += calcularDigito(cpf);\r",
+									" \r",
+									"    return cpf;\r",
+									"}\r",
+									" \r",
+									"function calcularDigito(cpf) {\r",
+									"    let soma = 0;\r",
+									"    for (let i = 0; i < cpf.length; i++) {\r",
+									"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+									"    }\r",
+									"    let resto = (soma * 10) % 11;\r",
+									"    return (resto > 9) ? '0' : resto.toString();\r",
+									"}\r",
+									" \r",
+									"pm.environment.set(\"cpf\", gerarCPF());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login com sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Check Token is True', function () {",
+									"    pm.expect(pm.response.json().token).to.exist;",
+									"})",
+									"",
+									"pm.environment.set('tokenUser', pm.variables.replaceIn(pm.response.json().token))",
+									"",
+									"",
+									"pm.test(\"Autenticação autorizada com sucesso!\", function(){",
+									"  pm.expect(pm.response.json().msg).to.exist;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login- Solicitação invalida",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code ins 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mail\": \"Pamela_a5b93031-7903-4cbe-ad28-0df779420191@outlook.com\",\r\n    \"password\": \"$2b$10$VY0b.mbQRSZgFBKDUnLRmebF/6iCN1Gb4zoEbOMxTXRd.Ew0xtudm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"O campo e-mail é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo e-mail é obrigatório.');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"\",\r\n  \"password\": \"{{password}}\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Senha em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"O campo senha é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo senha é obrigatório');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"testJoao@test.com.br\",\r\n  \"password\": \"\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email e Senha em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"O campo e-mail é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo e-mail é obrigatório.');\r",
+									"});\r",
+									"pm.test(\"O campo senha é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo senha é obrigatório.');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"\",\r\n  \"password\": \"\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email Valido e Senha  Invalida",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"E-mail ou senha informados são inválidos.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('E-mail ou senha informados são inválidos.');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"testJoao@test.com.br\",\r\n  \"password\": \"3254@uol\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email Invalido e Senha  Valida",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"E-mail ou senha informados são inválidos.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('E-mail ou senha informados são inválidos.');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"testJoao@com.br\",\r\n  \"password\": \"1234@Test\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login com email invalido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"E-mail ou senha informados são inválidos.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('E-mail ou senha informados são inválidos.');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"sysadmin@qacoders.com.br\",\r\n  \"password\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "in",
+						"value": "query",
+						"type": "string"
+					},
+					{
+						"key": "value",
+						"value": "{{tokenUser}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Excluir cadastro login",
+			"item": [
+				{
+					"name": "Excluir cadastro sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Usuário deletado com sucesso!.', function () {\r",
+									"    pm.expect(pm.globals.get('msgDelete')).to.eql(JSON.parse(responseBody).msg);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Acesso sem token- 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 403', function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/65df143c62c4338de3cac8c6",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"65df143c62c4338de3cac8c6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Solicitacao invalida- 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test('Esse usuário não existe em nossa base de dados.', function () {\r",
+									"    pm.expect(pm.globals.get('alertNoExist')).to.eql(JSON.parse(responseBody).alert[0]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/65e9e57862c4338de3d9aa29",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"65e9e57862c4338de3d9aa29"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Erro servidor- 500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/65e9e57862c4338de3d9ae9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"65e9e57862c4338de3d9ae9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Atualizar dados user",
+			"item": [
+				{
+					"name": "Criar user  Sucess Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check is fullName True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"FullName\")).to.eql(pm.response.json().user.fullName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check is mail True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"Mail\")).to.eql(pm.response.json().user.mail);\r",
+									"});\r",
+									"pm.test(\"Check is cpf True\", function(){\r",
+									"    pm.expect(pm.environment.get(\"cpf\")).to.eql(pm.response.json().user.cpf);\r",
+									"    });\r",
+									" pm.environment.set('userId', pm.response.json().user._id)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Gerar Primeiro Nome\r",
+									"\r",
+									"function firstName() {\r",
+									"\r",
+									"    let firstName = [\"Mario\",\"Andre\",\"Jorge\",\"Ines\",\"Marina\",\"Eduardo\",\"Marcela\",\"Lopes\",\"Aparecida\",\"Rubens\",\"Pedro\",\"Mateus\",\"Leonor\"];\r",
+									"\r",
+									"    let ramdomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"FirstName\", firstName());\r",
+									"\r",
+									"//Gerar Ultimo nome\r",
+									"\r",
+									"function lastName() {\r",
+									"\r",
+									"    let lastName = [\"de Assis\",\"dos Santos\",\"Andrade Reis\",\"Soares\",\"Mesquita\",\"Vanconcelos\",\"Moreira\",\"Gouveia\",\"Silva Santos\",\"Coelho\",\" Pereira\",\"Augusto\",\"Milano\"];\r",
+									"\r",
+									"    let ramdomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"pm.environment.set(\"LastName\", lastName());\r",
+									"\r",
+									"// Gerar Nome e Sobrenome\r",
+									"\r",
+									"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+									"\r",
+									"// Gerar provedor de email\r",
+									"\r",
+									"function providerMail() {\r",
+									"\r",
+									"    let providerMail = [\"@gmail.com\",\"@hotmail.com\",\"@yahoo.com.br\",\"@uol.com\",\"@outlook.com\"];\r",
+									"\r",
+									"    let ramdomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+									"\r",
+									"    return ramdomItem\r",
+									"}\r",
+									"pm.environment.set(\"ProviderMail\", providerMail());\r",
+									"\r",
+									"// Gerar Email commpleto\r",
+									"\r",
+									"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"));\r",
+									"\r",
+									"// Gerar CPF\r",
+									"\r",
+									"function gerarCPF() {\r",
+									"    let num = Math.floor(Math.random() * 999999999);\r",
+									"    let cpf = num.toString().padStart(9, '0');\r",
+									"    cpf += calcularDigito(cpf);\r",
+									"    cpf += calcularDigito(cpf);\r",
+									" \r",
+									"    return cpf;\r",
+									"}\r",
+									" \r",
+									"function calcularDigito(cpf) {\r",
+									"    let soma = 0;\r",
+									"    for (let i = 0; i < cpf.length; i++) {\r",
+									"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+									"    }\r",
+									"    let resto = (soma * 10) % 11;\r",
+									"    return (resto > 9) ? '0' : resto.toString();\r",
+									"}\r",
+									" \r",
+									"pm.environment.set(\"cpf\", gerarCPF());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"accessProfile\": \"ADMIN\",\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login com sucess Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Check Token is True', function () {",
+									"    pm.expect(pm.response.json().token).to.exist;",
+									"});",
+									"",
+									"pm.globals.set('token', pm.variables.replaceIn(pm.response.json().token));",
+									"",
+									"pm.test(\"Autenticação autorizada com sucesso!\", function(){",
+									"  pm.expect(pm.response.json().msg).to.exist;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"{{Mail}}\",\r\n  \"password\": \"{{password}}\"\r\n  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar dados sucess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Dados atualizados com sucesso!\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('Dados atualizados com sucesso!\"');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"{{FullName}}\",\r\n  \"mail\": \"{{Mail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Atualizar senha",
+			"item": [
+				{
+					"name": "Atualizar -Conflito",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Essa senha já foi utilizada anteriormente. Por favor, escolha uma nova senha.\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('Essa senha já foi utilizada anteriormente. Por favor, escolha uma nova senha.')\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"{{password}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Senha Sucess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Senha atualizada com sucesso!.\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('Senha atualizada com sucesso!')\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const randomDigits = Math.floor(10 + Math.random() * 90);\r",
+									"\r",
+									"pm.environment.set(\"RandomDigits\", randomDigits.toString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"{{password}}{{RandomDigits}}\",\r\n  \"confirmPassword\": \"{{password}}{{RandomDigits}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar- Acesso negado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"No token provided.\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('No token provided.')\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"{{password}}\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar- Password em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Msg erro: Campo senha é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('Campo senha é obrigatório');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar- ConfirmPassword em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Msg erro: O campo de confirmação de senha não pode ficar vazio.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha não pode ficar vazio.');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"{{password}}\",\r\n  \"confirmPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar- Campos em branco",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Msg erro: O campo de confirmação de senha não pode ficar vazio.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha não pode ficar vazio.');\r",
+									"});\r",
+									"pm.test(\"Msg erro: Campo senha é obrigatório\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('Campo senha é obrigatório');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar-Erro interno servidor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/password/{{userId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{userId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "Atualizar status sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status do usuario atualizado com sucesso!\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('Status do usuario atualizado com sucesso para status true.');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/status/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status- acesso negado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"pm.test(\"Falha na autenticação do token\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('No token provided.');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/status/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status- solicitacao invalida",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/status/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status- erro interno servidor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/status/{{userId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{userId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status- not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/status/{{userId}/7",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{userId}",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "in",
+						"value": "query",
+						"type": "string"
+					},
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
