@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1113aff8-8e1d-4dc0-a4f0-39daf57a9dbf",
+		"_postman_id": "5fb01377-4be6-48be-af7e-e331c89869ab",
 		"name": "02_Users",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27705872"
@@ -187,7 +187,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test('Status code ins 400', function () {\r",
+											"pm.test('Status code is 400', function () {\r",
 											"    pm.response.to.have.status(400);\r",
 											"})\r",
 											"\r",
@@ -197,7 +197,8 @@
 											"\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -246,7 +247,8 @@
 											" \r",
 											"pm.environment.set(\"cpf\", gerarCPF());"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -418,13 +420,14 @@
 											"    pm.response.to.have.status(400);\r",
 											"})\r",
 											"\r",
-											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.', function () {\r",
 											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
 											"});\r",
 											"\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -471,7 +474,8 @@
 											" \r",
 											"pm.environment.set(\"cpf\", gerarCPF());"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -673,12 +677,13 @@
 											"})\r",
 											"\r",
 											"\r",
-											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.', function () {\r",
 											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -752,7 +757,8 @@
 											" \r",
 											"pm.environment.set(\"cpf\", gerarCPF());"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -813,12 +819,13 @@
 											"})\r",
 											"\r",
 											"\r",
-											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula.', function () {\r",
+											"pm.test('Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.', function () {\r",
 											"    pm.expect(pm.globals.get('msgLetraMaiuscula')).to.eql(JSON.parse(responseBody).error[0]);\r",
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -892,7 +899,8 @@
 											" \r",
 											"pm.environment.set(\"cpf\", gerarCPF());"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1879,12 +1887,13 @@
 											"    pm.response.to.have.status(400);\r",
 											"})\r",
 											"\r",
-											"pm.test('Campo Confirmação de senha é obrigatório.', function () {\r",
+											"pm.test('O campo de confirmação de senha é obrigatório.', function () {\r",
 											"    pm.expect(pm.globals.get('msgConfirmSenha')).to.eql(JSON.parse(responseBody).error[0]);\r",
 											"});\r",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -1958,7 +1967,8 @@
 											" \r",
 											"pm.environment.set(\"cpf\", gerarCPF());"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -4168,8 +4178,8 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Msg erro: O campo de confirmação de senha não pode ficar vazio.\", function () {\r",
-									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha não pode ficar vazio.');\r",
+									"pm.test(\"Msg erro: O campo de confirmação de senha é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha é obrigatório.');\r",
 									"});\r",
 									""
 								],
@@ -4184,7 +4194,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "{{token}}",
+									"value": "{{tokenUser}}",
 									"type": "string"
 								},
 								{
@@ -4235,8 +4245,8 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Msg erro: O campo de confirmação de senha não pode ficar vazio.\", function () {\r",
-									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha não pode ficar vazio.');\r",
+									"pm.test(\"Msg erro:O campo de confirmação de senha é obrigatório.\", function () {\r",
+									"     pm.expect(pm.response.text()).to.include('O campo de confirmação de senha é obrigatório.');\r",
 									"});\r",
 									"pm.test(\"Msg erro: Campo senha é obrigatório\", function () {\r",
 									"     pm.expect(pm.response.text()).to.include('Campo senha é obrigatório');\r",
@@ -4253,7 +4263,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "{{token}}",
+									"value": "{{tokenUser}}",
 									"type": "string"
 								},
 								{
