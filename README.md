@@ -1,5 +1,5 @@
 <h1> Chips-academy-api-postman <h1>
-  <h2>    Este repositório contém a coleção de testes do Postman para a API do Qa.Coders Academy      </h2>
+  <h2>    Este repositório contém a coleção de testes do Postman para a API do Qa.Coders desenvolvidos no Treinee Academy      </h2>
 
  # Tecnologias Utilizadas:
 Antes de começar, você vai precisar ter instalado:
