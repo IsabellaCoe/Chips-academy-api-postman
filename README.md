@@ -1,14 +1,14 @@
 <h1> Chips-academy-api-postman <h1>
   <h2>    Este repositório contém a coleção de testes do Postman para a API do Qa.Coders Academy      </h2>
 
- # Tecnologias Utilizadas
+ # Tecnologias Utilizadas:
 Antes de começar, você vai precisar ter instalado:
 
 - [Postman](https://www.postman.com/downloads/)
 - [Newman](https://www.npmjs.com/package/newman) 
 - Node.js
 
-# Instalação
+# Instalação:
 - Postman : [Site do Postman](https://www.postman.com/downloads/)
    <br>
    <br>
